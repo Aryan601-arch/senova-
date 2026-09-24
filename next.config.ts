@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Lets phones on the same Wi-Fi open the dev server (npm run dev) by the computer's network address.
+  allowedDevOrigins: ["192.168.*.*", "10.*.*.*"],
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 90],
