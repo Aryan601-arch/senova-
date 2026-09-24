@@ -2,7 +2,7 @@
 
 import { useRef, useState, type RefObject } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { MeshDistortMaterial } from "@react-three/drei";
+import { Billboard, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
 import { cursorStore } from "@/lib/stores";
 import { getDeviceTier } from "@/lib/webgl";
@@ -13,14 +13,22 @@ import { InteractiveGrid } from "../interactive-grid";
 import { FloatingSphere } from "../floating-sphere";
 import { useSectionProgress } from "../use-section-progress";
 import { useViewPointer } from "../view-context";
+import { PhotoCard, type ScenePhoto } from "../photo-card";
 
 type DistortMaterialImpl = THREE.MeshPhysicalMaterial & { distort: number; speed: number };
 
+type HeroSceneProps = {
+  sectionRef: RefObject<HTMLElement | null>;
+  /** Product photos that orbit the core; clicking one opens its product page. */
+  photos?: ScenePhoto[];
+  onSelectPhoto?: (photo: ScenePhoto) => void;
+};
+
 /**
- * Hero: a liquid-chrome core wrapped in a glass ring and glowing orbits,
- * floating above an interactive grid. Reacts to pointer, hover, click and scroll.
+ * Hero: a liquid-chrome core wrapped in a glass ring, with Webor product photos
+ * orbiting it above an interactive grid. Reacts to pointer, hover, click and scroll.
  */
-export default function HeroScene({ sectionRef }: { sectionRef: RefObject<HTMLElement | null> }) {
+export default function HeroScene({ sectionRef, photos = [], onSelectPhoto }: HeroSceneProps) {
   const palette = useScenePalette();
   const [tier] = useState(getDeviceTier);
   const { size, viewport } = useThree();
@@ -36,6 +44,7 @@ export default function HeroScene({ sectionRef }: { sectionRef: RefObject<HTMLEl
   const glassRing = useRef<THREE.Mesh>(null);
   const orbitA = useRef<THREE.Mesh>(null);
   const orbitB = useRef<THREE.Mesh>(null);
+  const cards = useRef<(THREE.Group | null)[]>([]);
   const [hovered, setHovered] = useState(false);
   const pulse = useRef(0);
   const intro = useRef(0);
@@ -44,6 +53,8 @@ export default function HeroScene({ sectionRef }: { sectionRef: RefObject<HTMLEl
   const baseX = isMobile ? 0 : viewport.width * 0.2;
   const baseY = isMobile ? 1.05 : 0.05;
   const baseScale = isMobile ? 0.46 : 1;
+  // Keep the orbiting photos clear of the headline on the left.
+  const orbitX = isMobile ? 2.7 : Math.min(2.7, (viewport.width * 0.3) / baseScale);
 
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
@@ -76,6 +87,16 @@ export default function HeroScene({ sectionRef }: { sectionRef: RefObject<HTMLEl
       glassRing.current.rotation.x = 1.1 + Math.sin(t * 0.4) * 0.15 + vp.current.y * 0.3;
       glassRing.current.rotation.y = t * 0.25 + vp.current.x * 0.4;
     }
+    // Product cards travel around the core on a tilted ellipse, passing behind it.
+    const n = cards.current.length;
+    cards.current.forEach((card, i) => {
+      if (!card) return;
+      const a = t * 0.16 + (i / n) * Math.PI * 2;
+      card.position.set(Math.cos(a) * orbitX, Math.sin(a) * 0.55 + Math.sin(t * 0.9 + i) * 0.08, Math.sin(a) * 1.5);
+      const depth = (Math.sin(a) + 1) / 2; // 0 = back, 1 = front
+      card.scale.setScalar(Math.max(0.001, intro.current * (0.72 + depth * 0.38)));
+    });
+
     if (orbitA.current) orbitA.current.rotation.z = t * 0.2;
     if (orbitB.current) orbitB.current.rotation.z = -t * 0.12;
   });
@@ -145,6 +166,21 @@ export default function HeroScene({ sectionRef }: { sectionRef: RefObject<HTMLEl
             <torusGeometry args={[2.85, 0.004, 8, 256]} />
             <meshBasicMaterial color={palette.accent2} toneMapped={false} transparent opacity={0.6} />
           </mesh>
+
+          <group scale={baseScale}>
+            {photos.map((photo, i) => (
+              <group key={photo.id} ref={(el) => void (cards.current[i] = el)} scale={0.001}>
+                <Billboard>
+                  <PhotoCard
+                    src={photo.src}
+                    width={isMobile ? 0.9 : 0.72}
+                    hoverLabel="View"
+                    onSelect={onSelectPhoto ? () => onSelectPhoto(photo) : undefined}
+                  />
+                </Billboard>
+              </group>
+            ))}
+          </group>
 
           <FloatingSphere position={[1.6 * baseScale, 1.25 * baseScale, 0.4]} radius={0.14} material="emissive" color={palette.accent} hoverLabel="Pop" />
           <FloatingSphere position={[-1.85 * baseScale, -1.2 * baseScale, 0.6]} radius={0.24} material="chrome" color={palette.metal} hoverLabel="Pop" />

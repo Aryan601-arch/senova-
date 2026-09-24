@@ -11,6 +11,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { SceneView } from "@/components/three/scene-view";
 import { SceneFallback } from "@/components/three/scene-fallback";
 import { cn } from "@/lib/utils";
+import type { ScenePhoto } from "@/components/three/photo-card";
 
 const ServicesScene = dynamic(() => import("@/components/three/scenes/services-scene"), { ssr: false });
 
@@ -117,7 +118,13 @@ function ServiceRow({ service, index, active, count }: { service: Service; index
   );
 }
 
-export function Services({ counts = {} }: { counts?: Partial<Record<Service["id"], number>> }) {
+export function Services({
+  counts = {},
+  photos = {},
+}: {
+  counts?: Partial<Record<Service["id"], number>>;
+  photos?: Partial<Record<Service["id"], ScenePhoto[]>>;
+}) {
   const active = activeServiceStore.use();
   const current = services[active] ?? services[0];
   const CurrentIcon = icons[current.icon];
@@ -141,14 +148,14 @@ export function Services({ counts = {} }: { counts?: Partial<Record<Service["id"
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-12">
           {/* Visual panel */}
           <div className="lg:order-2 lg:col-span-5">
-            <div className="relative overflow-hidden rounded-[2rem] border border-line bg-bg-elevated/30 lg:sticky lg:top-28">
+            <div className="relative overflow-hidden rounded-[2rem] border border-line lg:sticky lg:top-28">
               <SceneView
                 className="relative aspect-[4/3] w-full lg:aspect-[4/5]"
                 camera={{ position: [0, 0, 6], fov: 35 }}
                 fallback={<SceneFallback accent={current.color} />}
-                label={`3D visual representing ${current.title}`}
+                label={`${current.title} products from Webor in a 3D display`}
               >
-                <ServicesScene />
+                <ServicesScene photos={photos} />
               </SceneView>
               <div
                 aria-hidden="true"

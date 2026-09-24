@@ -11,13 +11,31 @@ import { HashScroll } from "@/components/providers/hash-scroll";
 import { HomeJsonLd } from "@/components/seo/json-ld";
 import { promotion } from "@/data/promotion";
 import type { Stat } from "@/data/about";
-import { getCatalogStats, getFeaturedProducts, getProducts } from "@/lib/db";
+import { getCatalogStats, getFeaturedProducts, getPhotoProducts, getProducts, type Product } from "@/lib/db";
+import type { ScenePhoto } from "@/components/three/photo-card";
+import type { ProductGroup } from "@/data/catalog";
+
+const toScenePhoto = (p: Product): ScenePhoto => ({ id: p.id, src: `/uploads/${p.photo}`, label: p.model });
 
 export default async function HomePage() {
   // Read the live database on every request so admin edits show immediately.
   await connection();
   const catalog = getCatalogStats();
   const featured = getFeaturedProducts(8);
+  const withPhotos = getPhotoProducts();
+  const rangePhotos: Partial<Record<ProductGroup, ScenePhoto[]>> = {};
+  for (const p of withPhotos) {
+    // One photo per category first, so each range shows a mix of product types.
+    const list = (rangePhotos[p.category_group] ??= []);
+    if (list.length < 3 && !list.some((x) => x.label === p.category)) list.push({ ...toScenePhoto(p), label: p.category });
+  }
+  for (const p of withPhotos) {
+    const list = (rangePhotos[p.category_group] ??= []);
+    if (list.length < 3 && !list.some((x) => x.id === p.id)) list.push(toScenePhoto(p));
+  }
+  const heroPhotos = featured.map(toScenePhoto);
+  const aboutPhotos = withPhotos.filter((p) => !featured.some((f) => f.id === p.id)).slice(0, 4).map(toScenePhoto);
+
   const promoProducts = getProducts("cooling").filter((p) => p.category === promotion.category);
 
   const stats: Stat[] = [
@@ -31,9 +49,9 @@ export default async function HomePage() {
     <>
       <HomeJsonLd />
       <HashScroll />
-      <Hero />
-      <About stats={stats} />
-      <Services counts={catalog.byGroup} />
+      <Hero photos={heroPhotos} />
+      <About stats={stats} photos={aboutPhotos} />
+      <Services counts={catalog.byGroup} photos={rangePhotos} />
       <FeaturedProducts products={featured} total={catalog.products} />
       <Promotion products={promoProducts} />
       <Process />

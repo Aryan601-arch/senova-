@@ -9,6 +9,7 @@ import { activeServiceStore } from "@/lib/stores";
 import { useScenePalette, type ScenePalette } from "../scene-theme";
 import { SceneEnvironment } from "../scene-environment";
 import { RotatingObject } from "../rotating-object";
+import { PhotoCard, type ScenePhoto } from "../photo-card";
 
 type FormProps = { color: string; palette: ScenePalette };
 
@@ -165,8 +166,18 @@ const forms: Record<ServiceVisual, (p: FormProps) => React.JSX.Element> = {
   cube: CubeForm,
 };
 
-/** Services: the visual morphs between six forms as services are hovered. */
-export default function ServicesScene() {
+/** Up to three photos fanned out in front of the range's form. */
+const fan: { position: [number, number, number]; rotation: [number, number, number]; width: number }[] = [
+  { position: [0, -0.05, 1.1], rotation: [0, 0, 0], width: 1.25 },
+  { position: [-0.85, 0.4, 0.55], rotation: [0, 0.45, 0.06], width: 0.7 },
+  { position: [0.85, -0.45, 0.55], rotation: [0, -0.45, -0.06], width: 0.7 },
+];
+
+/**
+ * Ranges: the visual morphs between six forms as ranges are hovered, with that
+ * range's product photos fanned out in front.
+ */
+export default function ServicesScene({ photos = {} }: { photos?: Partial<Record<string, ScenePhoto[]>> }) {
   const palette = useScenePalette();
   const groups = useRef<(THREE.Group | null)[]>([]);
   const light = useRef<THREE.PointLight>(null);
@@ -181,7 +192,8 @@ export default function ServicesScene() {
       const s = THREE.MathUtils.damp(g.scale.x, target, isActive ? 6 : 9, delta);
       g.scale.setScalar(Math.max(0.0001, s));
       g.visible = s > 0.01;
-      g.rotation.y += delta * (0.25 + (1 - s) * 4);
+      // Sway instead of a full spin so the photo cards keep facing the viewer.
+      g.rotation.y = Math.sin(state.clock.elapsedTime * 0.5 + i) * 0.3 + (1 - s) * 2.5;
       g.position.y = Math.sin(state.clock.elapsedTime * 0.8 + i) * 0.06;
     });
     if (light.current) {
@@ -199,7 +211,12 @@ export default function ServicesScene() {
           const Form = forms[service.visual];
           return (
             <group key={service.id} ref={(el) => void (groups.current[i] = el)} scale={i === 0 ? 1 : 0.0001}>
-              <Form color={service.color} palette={palette} />
+              <group scale={0.8} position={[0, 0.15, -0.6]}>
+                <Form color={service.color} palette={palette} />
+              </group>
+              {(photos[service.id] ?? []).slice(0, fan.length).map((photo, j) => (
+                <PhotoCard key={photo.id} src={photo.src} {...fan[j]} />
+              ))}
             </group>
           );
         })}

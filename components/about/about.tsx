@@ -10,10 +10,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { SceneView } from "@/components/three/scene-view";
 import { SceneFallback } from "@/components/three/scene-fallback";
 import { Stats } from "./stats";
+import type { ScenePhoto } from "@/components/three/photo-card";
 
 const AboutScene = dynamic(() => import("@/components/three/scenes/about-scene"), { ssr: false });
 
-export function About({ stats }: { stats: Stat[] }) {
+export function About({ stats, photos = [] }: { stats: Stat[]; photos?: ScenePhoto[] }) {
   const sectionRef = useRef<HTMLElement>(null);
 
   return (
@@ -48,14 +49,14 @@ export function About({ stats }: { stats: Stat[] }) {
 
         <div className="mt-20 grid gap-12 md:mt-28 md:grid-cols-12 md:gap-8">
           <Reveal className="md:col-span-6 lg:col-span-5">
-            <figure className="relative overflow-hidden rounded-[2rem] border border-line bg-bg-elevated/40">
+            <figure className="relative overflow-hidden rounded-[2rem] border border-line">
               <SceneView
                 className="relative aspect-[4/5] w-full"
                 camera={{ position: [0, 0, 7.2], fov: 35 }}
                 fallback={<SceneFallback variant="rings" />}
-                label="A 3D gyroscope of three nested rings rotating around a glowing core"
+                label="Webor product photos circling a 3D gyroscope of rotating rings"
               >
-                <AboutScene sectionRef={sectionRef} />
+                <AboutScene sectionRef={sectionRef} photos={photos} />
               </SceneView>
               <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6">
                 <span className="eyebrow max-w-[26ch] leading-relaxed">

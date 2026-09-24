@@ -118,3 +118,14 @@ export function updateProduct(id: number, p: NewProduct) {
 export function deleteProduct(id: number) {
   db.prepare("DELETE FROM products WHERE id = ?").run(id);
 }
+
+/** One product per distinct photo, for the 3D scenes. */
+export function getPhotoProducts(): Product[] {
+  return db
+    .prepare(
+      `SELECT * FROM products WHERE id IN (
+         SELECT MIN(id) FROM products WHERE photo IS NOT NULL GROUP BY photo
+       ) ORDER BY category_group, category, price`,
+    )
+    .all() as Product[];
+}
