@@ -11,7 +11,7 @@ import { HashScroll } from "@/components/providers/hash-scroll";
 import { HomeJsonLd } from "@/components/seo/json-ld";
 import { promotion } from "@/data/promotion";
 import type { Stat } from "@/data/about";
-import { getCatalogStats, getFeaturedProducts, getPhotoProducts, getProducts, type Product } from "@/lib/db";
+import { getCatalogStats, getPhotoProducts, getProducts, type Product } from "@/lib/db";
 import type { ScenePhoto } from "@/lib/stores";
 import type { ProductGroup } from "@/data/catalog";
 
@@ -23,12 +23,27 @@ const toScenePhoto = (p: Product): ScenePhoto => ({
   price: p.price,
 });
 
+/** Fisher–Yates shuffle, so every visit shows a different mix of photos. */
+function shuffle<T>(items: T[]): T[] {
+  const a = [...items];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export default async function HomePage() {
   // Read the live database on every request so admin edits show immediately.
   await connection();
   const catalog = getCatalogStats();
-  const featured = getFeaturedProducts(8);
-  const withPhotos = getPhotoProducts();
+  // Photos are picked at random on every page load (reload = new pictures).
+  const withPhotos = shuffle(getPhotoProducts());
+  // Featured: one random product from each of eight random categories.
+  const featured: Product[] = [];
+  for (const p of withPhotos) {
+    if (featured.length < 8 && !featured.some((f) => f.category === p.category)) featured.push(p);
+  }
   const rangePhotos: Partial<Record<ProductGroup, ScenePhoto[]>> = {};
   for (const p of withPhotos) {
     // One photo per category first, so each range shows a mix of product types.

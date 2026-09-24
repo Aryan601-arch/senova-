@@ -78,17 +78,6 @@ export function getRelatedProducts(product: Product, limit = 4): Product[] {
     .all(product.category, product.id, limit) as Product[];
 }
 
-/** Products that have a photo, one per category first so the selection stays varied. */
-export function getFeaturedProducts(limit = 8): Product[] {
-  return db
-    .prepare(
-      `SELECT * FROM products WHERE id IN (
-         SELECT MIN(id) FROM products WHERE photo IS NOT NULL GROUP BY category
-       ) ORDER BY category_group, category LIMIT ?`,
-    )
-    .all(limit) as Product[];
-}
-
 export function getCatalogStats() {
   const row = db
     .prepare("SELECT COUNT(*) AS products, COUNT(DISTINCT category) AS categories FROM products")
