@@ -109,7 +109,7 @@ export default async function ProductPage({ params }: Props) {
 
         {related.length > 0 && (
           <div className="mt-24 flex flex-col gap-8 md:mt-32">
-            <h2 className="text-headline max-w-[16ch] font-medium">More from {product.category}</h2>
+            <h2 className="max-w-[16ch] text-[clamp(2rem,7vw,4.5rem)] font-medium leading-none tracking-[-0.04em] text-balance">More from {product.category}</h2>
             <ul className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
               {related.map((p) => (
                 <li key={p.id}>

@@ -4,7 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, type ThreeElements } from "@react-three/fiber";
 import { RoundedBox, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { cursorStore, hoveredPhotoStore, photoNavigation, type ScenePhoto } from "@/lib/stores";
+import { cursorStore, hoveredPhotoStore, isTouchScreen, photoNavigation, type ScenePhoto } from "@/lib/stores";
 
 export type { ScenePhoto };
 
@@ -60,6 +60,7 @@ function Card({ photo, width = 1, ...props }: PhotoCardProps) {
         ref={group}
         onPointerOver={(e) => {
           e.stopPropagation();
+          if (isTouchScreen()) return; // touch: handled by tap below
           setHovered(true);
           cursorStore.set({ label: "View", variant: "hover" });
           hoveredPhotoStore.set(photo);
@@ -67,6 +68,11 @@ function Card({ photo, width = 1, ...props }: PhotoCardProps) {
         onPointerOut={leave}
         onClick={(e) => {
           e.stopPropagation();
+          if (isTouchScreen() && hoveredPhotoStore.get()?.id !== photo.id) {
+            // First tap shows the details card; tapping the same photo again opens it.
+            hoveredPhotoStore.set(photo);
+            return;
+          }
           leave();
           photoNavigation.open?.(photo.id);
         }}

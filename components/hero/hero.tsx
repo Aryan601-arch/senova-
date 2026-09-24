@@ -93,7 +93,7 @@ export function Hero({ photos = [] }: { photos?: ScenePhoto[] }) {
 
       <div
         ref={contentRef}
-        className="container-x pointer-events-none relative flex flex-1 flex-col justify-end pb-10 pt-32 md:pb-12"
+        className="container-x pointer-events-none relative flex flex-1 flex-col justify-end pb-10 pt-[50svh] md:pb-12 md:pt-32"
       >
         <p data-hero-fade className="eyebrow mb-6 flex items-center gap-3 md:mb-8">
           <span className="relative flex size-2" aria-hidden="true">

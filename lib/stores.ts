@@ -39,3 +39,6 @@ export const hoveredPhotoStore = createStore<ScenePhoto | null>(null);
 
 /** Set by the DOM (which has the router) so 3D photo cards can open product pages. */
 export const photoNavigation: { open: ((id: number) => void) | null } = { open: null };
+
+/** True on touch screens: the first tap on a 3D photo shows its details, the second opens it. */
+export const isTouchScreen = () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;

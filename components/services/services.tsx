@@ -151,7 +151,7 @@ export function Services({
             <div className="relative overflow-hidden rounded-[2rem] border border-line lg:sticky lg:top-28">
               <SceneView
                 interactive
-                className="relative aspect-[4/3] w-full lg:aspect-[4/5]"
+                className="relative aspect-square w-full sm:aspect-[4/3] lg:aspect-[4/5]"
                 camera={{ position: [0, 0, 6], fov: 35 }}
                 fallback={<SceneFallback accent={current.color} />}
                 label={`${current.title} products from Webor in a 3D display`}

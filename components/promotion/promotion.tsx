@@ -25,7 +25,7 @@ export function Promotion({ products }: { products: Product[] }) {
           </div>
 
           <div className="relative grid gap-14 lg:grid-cols-12 lg:gap-10">
-            <div className="flex flex-col gap-10 lg:col-span-6">
+            <div className="flex min-w-0 flex-col gap-10 lg:col-span-6">
               <SectionHeading
                 index="04"
                 eyebrow={promotion.eyebrow}
@@ -43,7 +43,7 @@ export function Promotion({ products }: { products: Product[] }) {
               </div>
             </div>
 
-            <Reveal className="lg:col-span-6">
+            <Reveal className="min-w-0 lg:col-span-6">
               <div className="glass rounded-[1.75rem] p-5 md:p-7">
                 <p className="eyebrow mb-2 flex items-center gap-2">
                   <Snowflake className="size-3.5" aria-hidden="true" /> {promotion.category} lineup

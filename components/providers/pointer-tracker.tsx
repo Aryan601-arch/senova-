@@ -17,9 +17,12 @@ export function PointerTracker() {
       pointer.active = false;
     };
     window.addEventListener("pointermove", onMove, { passive: true });
+    // Taps on touch screens do not always send pointermove first.
+    window.addEventListener("pointerdown", onMove, { passive: true });
     document.documentElement.addEventListener("pointerleave", onLeave);
     return () => {
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
     };
   }, []);

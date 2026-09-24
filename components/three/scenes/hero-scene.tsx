@@ -50,11 +50,12 @@ export default function HeroScene({ sectionRef, photos = [] }: HeroSceneProps) {
 
   const segments = tier === "high" ? 160 : tier === "mid" ? 112 : 72;
   const baseX = isMobile ? 0 : viewport.width * 0.25;
-  const baseY = isMobile ? 1.05 : 0.05;
-  const baseScale = isMobile ? 0.46 : 1;
+  // On phones the sculpture sits small above the headline, with the photos orbiting inside the screen width.
+  const baseY = isMobile ? viewport.height * 0.25 : 0.05;
+  const baseScale = isMobile ? 0.4 : 1;
   // Keep the orbiting photos clear of the headline on the left: the orbit is
   // narrow across the screen and deep toward the viewer instead.
-  const orbitX = isMobile ? 2.7 : Math.min(2.4, viewport.width * 0.19);
+  const orbitX = isMobile ? Math.min(2.4, (viewport.width / 2 - 0.3) / baseScale) : Math.min(2.4, viewport.width * 0.19);
   const orbitZ = isMobile ? 1.5 : 2;
 
   useFrame((state, delta) => {
@@ -172,7 +173,7 @@ export default function HeroScene({ sectionRef, photos = [] }: HeroSceneProps) {
             {photos.map((photo, i) => (
               <group key={photo.id} ref={(el) => void (cards.current[i] = el)} scale={0.001}>
                 <Billboard>
-                  <PhotoCard photo={photo} width={isMobile ? 0.9 : 0.66} />
+                  <PhotoCard photo={photo} width={isMobile ? 1 : 0.66} />
                 </Billboard>
               </group>
             ))}
