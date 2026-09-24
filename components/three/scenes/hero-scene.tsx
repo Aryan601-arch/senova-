@@ -19,16 +19,15 @@ type DistortMaterialImpl = THREE.MeshPhysicalMaterial & { distort: number; speed
 
 type HeroSceneProps = {
   sectionRef: RefObject<HTMLElement | null>;
-  /** Product photos that orbit the core; clicking one opens its product page. */
+  /** Product photos that orbit the core; hover shows details, click opens the product. */
   photos?: ScenePhoto[];
-  onSelectPhoto?: (photo: ScenePhoto) => void;
 };
 
 /**
  * Hero: a liquid-chrome core wrapped in a glass ring, with Webor product photos
  * orbiting it above an interactive grid. Reacts to pointer, hover, click and scroll.
  */
-export default function HeroScene({ sectionRef, photos = [], onSelectPhoto }: HeroSceneProps) {
+export default function HeroScene({ sectionRef, photos = [] }: HeroSceneProps) {
   const palette = useScenePalette();
   const [tier] = useState(getDeviceTier);
   const { size, viewport } = useThree();
@@ -50,11 +49,13 @@ export default function HeroScene({ sectionRef, photos = [], onSelectPhoto }: He
   const intro = useRef(0);
 
   const segments = tier === "high" ? 160 : tier === "mid" ? 112 : 72;
-  const baseX = isMobile ? 0 : viewport.width * 0.2;
+  const baseX = isMobile ? 0 : viewport.width * 0.25;
   const baseY = isMobile ? 1.05 : 0.05;
   const baseScale = isMobile ? 0.46 : 1;
-  // Keep the orbiting photos clear of the headline on the left.
-  const orbitX = isMobile ? 2.7 : Math.min(2.7, (viewport.width * 0.3) / baseScale);
+  // Keep the orbiting photos clear of the headline on the left: the orbit is
+  // narrow across the screen and deep toward the viewer instead.
+  const orbitX = isMobile ? 2.7 : Math.min(2.4, viewport.width * 0.19);
+  const orbitZ = isMobile ? 1.5 : 2;
 
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
@@ -92,7 +93,7 @@ export default function HeroScene({ sectionRef, photos = [], onSelectPhoto }: He
     cards.current.forEach((card, i) => {
       if (!card) return;
       const a = t * 0.16 + (i / n) * Math.PI * 2;
-      card.position.set(Math.cos(a) * orbitX, Math.sin(a) * 0.55 + Math.sin(t * 0.9 + i) * 0.08, Math.sin(a) * 1.5);
+      card.position.set(Math.cos(a) * orbitX, Math.sin(a) * 0.55 + Math.sin(t * 0.9 + i) * 0.08, Math.sin(a) * orbitZ);
       const depth = (Math.sin(a) + 1) / 2; // 0 = back, 1 = front
       card.scale.setScalar(Math.max(0.001, intro.current * (0.72 + depth * 0.38)));
     });
@@ -171,12 +172,7 @@ export default function HeroScene({ sectionRef, photos = [], onSelectPhoto }: He
             {photos.map((photo, i) => (
               <group key={photo.id} ref={(el) => void (cards.current[i] = el)} scale={0.001}>
                 <Billboard>
-                  <PhotoCard
-                    src={photo.src}
-                    width={isMobile ? 0.9 : 0.72}
-                    hoverLabel="View"
-                    onSelect={onSelectPhoto ? () => onSelectPhoto(photo) : undefined}
-                  />
+                  <PhotoCard photo={photo} width={isMobile ? 0.9 : 0.66} />
                 </Billboard>
               </group>
             ))}

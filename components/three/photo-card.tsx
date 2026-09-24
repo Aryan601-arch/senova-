@@ -1,25 +1,25 @@
 "use client";
 
-import { Suspense, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, type ThreeElements } from "@react-three/fiber";
 import { RoundedBox, useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import { cursorStore } from "@/lib/stores";
+import { cursorStore, hoveredPhotoStore, photoNavigation, type ScenePhoto } from "@/lib/stores";
 
-/** A product photo shown inside a 3D scene. */
-export type ScenePhoto = { id: number; src: string; label: string };
+export type { ScenePhoto };
 
 type PhotoCardProps = ThreeElements["group"] & {
-  src: string;
+  photo: ScenePhoto;
   /** Card width in world units; height follows the photo's shape. */
   width?: number;
-  /** Cursor label and click action (e.g. open the product page). */
-  hoverLabel?: string;
-  onSelect?: () => void;
 };
 
-function Card({ src, width = 1, hoverLabel, onSelect, ...props }: PhotoCardProps) {
-  const texture = useTexture(src, (t) => {
+/**
+ * Hovering shows the product's details card and grows the photo a little;
+ * clicking opens the product page.
+ */
+function Card({ photo, width = 1, ...props }: PhotoCardProps) {
+  const texture = useTexture(photo.src, (t) => {
     const tex = Array.isArray(t) ? t[0] : t;
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 4;
@@ -45,38 +45,31 @@ function Card({ src, width = 1, hoverLabel, onSelect, ...props }: PhotoCardProps
     group.current.scale.setScalar(s);
   });
 
-  const interactive = !!onSelect;
+  const leave = () => {
+    setHovered(false);
+    cursorStore.set({ label: null, variant: "default" });
+    hoveredPhotoStore.set((current) => (current?.id === photo.id ? null : current));
+  };
+
+  // Clear the details card if this photo unmounts while hovered.
+  useEffect(() => () => hoveredPhotoStore.set((c) => (c?.id === photo.id ? null : c)), [photo.id]);
 
   return (
     <group {...props}>
       <group
         ref={group}
-        onPointerOver={
-          interactive
-            ? (e) => {
-                e.stopPropagation();
-                setHovered(true);
-                cursorStore.set({ label: hoverLabel ?? "View", variant: "hover" });
-              }
-            : undefined
-        }
-        onPointerOut={
-          interactive
-            ? () => {
-                setHovered(false);
-                cursorStore.set({ label: null, variant: "default" });
-              }
-            : undefined
-        }
-        onClick={
-          interactive
-            ? (e) => {
-                e.stopPropagation();
-                cursorStore.set({ label: null, variant: "default" });
-                onSelect?.();
-              }
-            : undefined
-        }
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          cursorStore.set({ label: "View", variant: "hover" });
+          hoveredPhotoStore.set(photo);
+        }}
+        onPointerOut={leave}
+        onClick={(e) => {
+          e.stopPropagation();
+          leave();
+          photoNavigation.open?.(photo.id);
+        }}
       >
         <RoundedBox args={[w, h, 0.04]} radius={Math.min(w, h) * 0.08} smoothness={4}>
           <meshBasicMaterial color="#ffffff" toneMapped={false} fog={false} />

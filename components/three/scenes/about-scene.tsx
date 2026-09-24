@@ -85,7 +85,7 @@ export default function AboutScene({ sectionRef, photos = [] }: { sectionRef: Re
       </RotatingObject>
       {photos.map((photo, i) => (
         <group key={photo.id} ref={(el) => void (cards.current[i] = el)}>
-          <PhotoCard src={photo.src} width={0.66} />
+          <PhotoCard photo={photo} width={0.66} />
         </group>
       ))}
       <ParticleField count={160} radius={3} depth={3} size={2.2} color={palette.particle} opacity={0.6} pointerStrength={0.15} />

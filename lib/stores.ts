@@ -30,3 +30,12 @@ export const cursorStore = createStore<{ label: string | null; variant: "default
  * fallback whenever the status is not "ready".
  */
 export const webglStatusStore = createStore<"pending" | "ready" | "failed">("pending");
+
+/** A product photo shown inside a 3D scene, with the details its hover card shows. */
+export type ScenePhoto = { id: number; src: string; model: string; category: string; price: number };
+
+/** The product photo under the pointer in any 3D scene; drives the hover details card. */
+export const hoveredPhotoStore = createStore<ScenePhoto | null>(null);
+
+/** Set by the DOM (which has the router) so 3D photo cards can open product pages. */
+export const photoNavigation: { open: ((id: number) => void) | null } = { open: null };

@@ -11,7 +11,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { SceneView } from "@/components/three/scene-view";
 import { SceneFallback } from "@/components/three/scene-fallback";
 import { cn } from "@/lib/utils";
-import type { ScenePhoto } from "@/components/three/photo-card";
+import type { ScenePhoto } from "@/lib/stores";
 
 const ServicesScene = dynamic(() => import("@/components/three/scenes/services-scene"), { ssr: false });
 
@@ -150,6 +150,7 @@ export function Services({
           <div className="lg:order-2 lg:col-span-5">
             <div className="relative overflow-hidden rounded-[2rem] border border-line lg:sticky lg:top-28">
               <SceneView
+                interactive
                 className="relative aspect-[4/3] w-full lg:aspect-[4/5]"
                 camera={{ position: [0, 0, 6], fov: 35 }}
                 fallback={<SceneFallback accent={current.color} />}

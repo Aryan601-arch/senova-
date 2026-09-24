@@ -2,8 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useRef } from "react";
-import { useRouter } from "next/navigation";
-import type { ScenePhoto } from "@/components/three/photo-card";
+import type { ScenePhoto } from "@/lib/stores";
 import { heroContent } from "@/data/site";
 import { ButtonLink } from "@/components/ui/button";
 import { SceneView } from "@/components/three/scene-view";
@@ -16,7 +15,6 @@ import { ScrollIndicator } from "./scroll-indicator";
 const HeroScene = dynamic(() => import("@/components/three/scenes/hero-scene"), { ssr: false });
 
 export function Hero({ photos = [] }: { photos?: ScenePhoto[] }) {
-  const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const loaded = loaderStore.use();
@@ -90,7 +88,7 @@ export function Hero({ photos = [] }: { photos?: ScenePhoto[] }) {
         fallback={<SceneFallback variant="grid" />}
         label="Webor product photos orbiting a liquid chrome sphere wrapped in a glass ring"
       >
-        <HeroScene sectionRef={sectionRef} photos={photos} onSelectPhoto={(p) => router.push(`/product/${p.id}`)} />
+        <HeroScene sectionRef={sectionRef} photos={photos} />
       </SceneView>
 
       <div

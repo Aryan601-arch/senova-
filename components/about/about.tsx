@@ -10,7 +10,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { SceneView } from "@/components/three/scene-view";
 import { SceneFallback } from "@/components/three/scene-fallback";
 import { Stats } from "./stats";
-import type { ScenePhoto } from "@/components/three/photo-card";
+import type { ScenePhoto } from "@/lib/stores";
 
 const AboutScene = dynamic(() => import("@/components/three/scenes/about-scene"), { ssr: false });
 
@@ -51,6 +51,7 @@ export function About({ stats, photos = [] }: { stats: Stat[]; photos?: ScenePho
           <Reveal className="md:col-span-6 lg:col-span-5">
             <figure className="relative overflow-hidden rounded-[2rem] border border-line">
               <SceneView
+                interactive
                 className="relative aspect-[4/5] w-full"
                 camera={{ position: [0, 0, 7.2], fov: 35 }}
                 fallback={<SceneFallback variant="rings" />}

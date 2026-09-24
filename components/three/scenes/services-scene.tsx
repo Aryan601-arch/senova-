@@ -215,7 +215,7 @@ export default function ServicesScene({ photos = {} }: { photos?: Partial<Record
                 <Form color={service.color} palette={palette} />
               </group>
               {(photos[service.id] ?? []).slice(0, fan.length).map((photo, j) => (
-                <PhotoCard key={photo.id} src={photo.src} {...fan[j]} />
+                <PhotoCard key={photo.id} photo={photo} {...fan[j]} />
               ))}
             </group>
           );

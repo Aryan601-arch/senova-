@@ -10,6 +10,7 @@ import { Preloader } from "@/components/loader/preloader";
 import { CustomCursor } from "@/components/cursor/custom-cursor";
 import { CanvasRoot } from "@/components/three/canvas-root";
 import { HelpBubble } from "@/components/help/help-bubble";
+import { PhotoTooltip } from "@/components/three/photo-tooltip";
 import { SiteOnly } from "@/components/providers/site-only";
 
 const interTight = Inter_Tight({
@@ -108,6 +109,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <SiteOnly>
             <Footer />
             <HelpBubble />
+            <PhotoTooltip />
           </SiteOnly>
         </AppProviders>
       </body>

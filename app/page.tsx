@@ -12,10 +12,16 @@ import { HomeJsonLd } from "@/components/seo/json-ld";
 import { promotion } from "@/data/promotion";
 import type { Stat } from "@/data/about";
 import { getCatalogStats, getFeaturedProducts, getPhotoProducts, getProducts, type Product } from "@/lib/db";
-import type { ScenePhoto } from "@/components/three/photo-card";
+import type { ScenePhoto } from "@/lib/stores";
 import type { ProductGroup } from "@/data/catalog";
 
-const toScenePhoto = (p: Product): ScenePhoto => ({ id: p.id, src: `/uploads/${p.photo}`, label: p.model });
+const toScenePhoto = (p: Product): ScenePhoto => ({
+  id: p.id,
+  src: `/uploads/${p.photo}`,
+  model: p.model,
+  category: p.category,
+  price: p.price,
+});
 
 export default async function HomePage() {
   // Read the live database on every request so admin edits show immediately.
@@ -27,7 +33,7 @@ export default async function HomePage() {
   for (const p of withPhotos) {
     // One photo per category first, so each range shows a mix of product types.
     const list = (rangePhotos[p.category_group] ??= []);
-    if (list.length < 3 && !list.some((x) => x.label === p.category)) list.push({ ...toScenePhoto(p), label: p.category });
+    if (list.length < 3 && !list.some((x) => x.category === p.category)) list.push(toScenePhoto(p));
   }
   for (const p of withPhotos) {
     const list = (rangePhotos[p.category_group] ??= []);
