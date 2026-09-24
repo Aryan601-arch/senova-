@@ -1,3 +1,5 @@
+import { siteUrl } from "@/lib/utils";
+
 /**
  * Global site configuration.
  * Change brand copy, hero text, contact details and social links here —
@@ -10,7 +12,7 @@ export const siteConfig = {
   tagline: "Digital experiences designed with technology, motion and imagination.",
   description:
     "Senova is an independent digital studio crafting immersive websites, products and 3D experiences for ambitious companies. Strategy, design and engineering under one roof.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://senova.studio",
+  url: siteUrl,
   locale: "en_US",
   keywords: [
     "digital studio",
