@@ -1,12 +1,11 @@
 export const aboutContent = {
-  eyebrow: "About Senova",
-  statement:
-    "We are a small, senior team of designers and engineers turning complex ideas into digital experiences people remember.",
+  eyebrow: "About us",
+  statement: "Creating easy life — one genuine Webor appliance at a time.",
   intro: [
-    "Senova was founded on a simple belief: the best digital work happens when strategy, design and engineering sit at the same table from day one.",
-    "We partner with founders, product teams and brands to ship websites, apps and interactive systems that are fast, accessible and unmistakably theirs.",
+    "Webor Appliances brings the Webor line of home electronics to Nepal — televisions, refrigerators, washing machines, air conditioners, and the everyday appliances that keep a household running.",
+    "We started as a page under Facebook's Electronics category and grew into a store people actually call back — one number for sales, one inbox for support, and stock that's genuinely from the Webor line, not a grey-market guess.",
   ],
-  principles: ["Senior-only team", "Design + engineering in one loop", "Performance as a feature"],
+  principles: ["Televisions", "Refrigerators", "Washing machines", "Air conditioners", "Everyday appliances"],
 };
 
 export type Stat = {
@@ -17,10 +16,10 @@ export type Stat = {
   detail: string;
 };
 
-/** Edit these numbers freely — counters animate to whatever you set. */
-export const stats: Stat[] = [
-  { value: 50, suffix: "+", label: "Projects", detail: "Shipped across web, mobile and 3D" },
-  { value: 20, suffix: "+", label: "Clients", detail: "From seed-stage to enterprise" },
-  { value: 10, suffix: "+", label: "Countries", detail: "Teams we have worked with" },
-  { value: 99, suffix: "%", label: "Commitment", detail: "The remaining 1% is coffee" },
+/** Trust points shown on the home page and product pages. */
+export const trustPoints = [
+  { title: "Genuine Webor stock", text: "Every unit we sell comes from the official Webor line — no grey-market guesswork." },
+  { title: "Manufacturer warranty", text: "Appliances are backed by Webor's standard warranty terms, not a shop promise." },
+  { title: "Real after-sales support", text: "Something needs a look after purchase? Call or message — no call-centre maze." },
+  { title: "One number, one team", text: "980-1111669 reaches the same people whether you're buying or following up." },
 ];

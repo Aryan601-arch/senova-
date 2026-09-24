@@ -1,9 +1,8 @@
 export const contactContent = {
-  eyebrow: "Contact",
-  title: "Have an idea? Let's make it real.",
-  text: "Tell us a little about your project. We read every message and reply within one business day.",
-  projectTypes: ["Website", "Web App", "Mobile App", "AI Product", "3D Experience", "Other"],
-  budgets: ["< $10k", "$10k – $25k", "$25k – $75k", "$75k +"],
-  successTitle: "Message received.",
-  successText: "Thank you — we'll be in touch within one business day.",
+  eyebrow: "Get in touch",
+  title: "Talk to Webor Appliances.",
+  text: "Call for the fastest answer, message us on Facebook if you'd rather browse first, or send a note below.",
+  formTitle: "Send us a note",
+  formText: "This opens your email app with the message ready to send to nepal@weborelectronics.com.",
+  formNote: "Prefer instant reply? Call 980-1111669 or message the Facebook page — both are checked directly by the Webor team.",
 };

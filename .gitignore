@@ -21,3 +21,6 @@ npm-debug.log*
 
 # vercel
 .vercel
+
+# product database (storage/uploads photos are kept)
+/storage/*.db*

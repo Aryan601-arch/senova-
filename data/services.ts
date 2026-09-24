@@ -1,84 +1,84 @@
+import type { ProductGroup } from "./catalog";
+
 export type ServiceVisual = "sphere" | "phone" | "neural" | "knot" | "cloud" | "cube";
 
+/** A product range, shown in the "Shop by range" section with its own 3D visual. */
 export type Service = {
-  id: string;
+  id: ProductGroup;
   number: string;
   title: string;
   description: string;
+  /** Categories in this range, shown as tags. */
   deliverables: string[];
-  /** Lucide icon name, mapped in components/services/service-icons.ts */
-  icon: "code" | "smartphone" | "brain" | "box" | "cloud" | "sparkles";
-  /** Which 3D form the visual panel morphs into when this service is active. */
+  /** Lucide icon name, mapped in components/services/services.tsx */
+  icon: "fridge" | "ac" | "washer" | "pot" | "tv" | "fan";
+  /** Which 3D form the visual panel morphs into when this range is active. */
   visual: ServiceVisual;
-  /** Accent color used by the 3D visual for this service. */
+  /** Accent color used by the 3D visual for this range. */
   color: string;
 };
 
 export const services: Service[] = [
   {
-    id: "web",
+    id: "refrigeration",
     number: "01",
-    title: "Web Development",
+    title: "Refrigeration",
     description:
-      "High-performance websites and web apps built on modern frameworks, engineered for speed, SEO and long-term maintainability.",
-    deliverables: ["Next.js & React", "Headless CMS", "Performance audits"],
-    icon: "code",
-    visual: "sphere",
-    color: "#d4ff3f",
-  },
-  {
-    id: "mobile",
-    number: "02",
-    title: "Mobile Applications",
-    description:
-      "Native-feeling iOS and Android apps with shared codebases, thoughtful motion and offline-first architecture.",
-    deliverables: ["React Native", "Expo", "App Store launch"],
-    icon: "smartphone",
-    visual: "phone",
-    color: "#7b8cff",
-  },
-  {
-    id: "ai",
-    number: "03",
-    title: "AI & Machine Learning",
-    description:
-      "Practical AI features — assistants, search, automation and recommendation — designed around real user workflows.",
-    deliverables: ["LLM integration", "RAG pipelines", "Model evaluation"],
-    icon: "brain",
-    visual: "neural",
-    color: "#ff7a45",
-  },
-  {
-    id: "3d",
-    number: "04",
-    title: "3D & Interactive Experiences",
-    description:
-      "Real-time WebGL worlds, product configurators and immersive storytelling that run smoothly on any device.",
-    deliverables: ["Three.js / R3F", "Product configurators", "Shader art"],
-    icon: "box",
-    visual: "knot",
-    color: "#43e5c4",
-  },
-  {
-    id: "cloud",
-    number: "05",
-    title: "Cloud Solutions",
-    description:
-      "Scalable, observable infrastructure on AWS and edge platforms, with CI/CD pipelines your team will actually enjoy.",
-    deliverables: ["AWS & Vercel", "Serverless APIs", "DevOps"],
-    icon: "cloud",
-    visual: "cloud",
+      "Single, double and multi-door refrigerators, hard-top and glass-top freezers, and upright visi chillers for shops.",
+    deliverables: ["Refrigerators", "Freezers", "Visi chillers"],
+    icon: "fridge",
+    visual: "cube",
     color: "#58b8ff",
   },
   {
-    id: "transformation",
-    number: "06",
-    title: "Digital Transformation",
+    id: "cooling",
+    number: "02",
+    title: "Cooling",
+    description: "Wall-mount air conditioners — fixed speed or DC Inverter with WiFi — and air coolers for every room size.",
+    deliverables: ["Air conditioners", "Air coolers"],
+    icon: "ac",
+    visual: "cloud",
+    color: "#43e5c4",
+  },
+  {
+    id: "laundry",
+    number: "03",
+    title: "Laundry",
+    description: "Front-loading washing machines, including BLDC inverter models, built for everyday family loads.",
+    deliverables: ["Front loading", "Inverter"],
+    icon: "washer",
+    visual: "sphere",
+    color: "#7b8cff",
+  },
+  {
+    id: "kitchen",
+    number: "04",
+    title: "Kitchen",
     description:
-      "Roadmaps, design systems and platform migrations that help established teams move at startup speed.",
-    deliverables: ["Design systems", "Platform migration", "Team enablement"],
-    icon: "sparkles",
-    visual: "cube",
+      "Rice cookers, microwaves, OTGs, air fryers, cooktops, mixer grinders, kettles and dishwashers — the whole kitchen.",
+    deliverables: ["Rice cookers", "Microwaves", "Cooktops", "Air fryers"],
+    icon: "pot",
+    visual: "knot",
+    color: "#ff7a45",
+  },
+  {
+    id: "entertainment",
+    number: "05",
+    title: "Entertainment",
+    description: "Frameless HD, FHD, 4K UHD and QLED televisions on Android and WebOS, from 32\" up.",
+    deliverables: ["HD to 4K", "Android & WebOS", "QLED"],
+    icon: "tv",
+    visual: "phone",
+    color: "#d4ff3f",
+  },
+  {
+    id: "home",
+    number: "06",
+    title: "Home",
+    description: "Ceiling and stand fans, water geysers, water dispensers and irons — the everyday appliances that keep a household running.",
+    deliverables: ["Fans", "Geysers", "Dispensers", "Irons"],
+    icon: "fan",
+    visual: "neural",
     color: "#f2c94c",
   },
 ];

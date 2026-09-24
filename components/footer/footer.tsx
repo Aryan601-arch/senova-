@@ -4,14 +4,13 @@ import Link from "next/link";
 import { useRef } from "react";
 import { ArrowUp } from "lucide-react";
 import { navItems } from "@/data/navigation";
-import { services } from "@/data/services";
+import { groupLabels, productGroups } from "@/data/catalog";
 import { contactInfo, footerContent, siteConfig, socialLinks } from "@/data/site";
 import { Logo } from "@/components/ui/logo";
 import { SocialIcon } from "@/components/ui/social-icon";
 import { NavLink } from "@/components/navbar/nav-link";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { useScrollTo } from "@/hooks/use-lenis-scroll";
-import { Newsletter } from "./newsletter";
 
 export function Footer() {
   const ref = useRef<HTMLElement>(null);
@@ -49,11 +48,14 @@ export function Footer() {
           <div className="flex flex-col gap-6 md:col-span-5">
             <Logo />
             <p className="max-w-sm text-fg-muted">{siteConfig.tagline}</p>
-            <div className="mt-2 max-w-md">
-              <p className="mb-1 text-lg font-medium">{footerContent.newsletterTitle}</p>
-              <p className="mb-5 text-sm text-fg-muted">{footerContent.newsletterText}</p>
-              <Newsletter />
-            </div>
+            <a
+              href={`tel:${contactInfo.phoneHref}`}
+              data-cursor="hover"
+              className="mt-2 w-fit text-[clamp(1.75rem,3vw,2.5rem)] font-medium tracking-[-0.04em] transition-colors hover:text-accent-text"
+            >
+              {contactInfo.phone}
+            </a>
+            <p className="-mt-3 text-sm text-fg-muted">{contactInfo.email}</p>
           </div>
 
           <nav aria-label="Footer" className="grid grid-cols-2 gap-10 sm:grid-cols-3 md:col-span-7">
@@ -62,7 +64,7 @@ export function Footer() {
               <ul className="flex flex-col gap-3">
                 {navItems.map((item) => (
                   <li key={item.id}>
-                    <NavLink id={item.id} className="text-sm text-fg-muted transition-colors hover:text-fg">
+                    <NavLink id={item.id} href={item.href} className="text-sm text-fg-muted transition-colors hover:text-fg">
                       {item.label}
                     </NavLink>
                   </li>
@@ -70,13 +72,13 @@ export function Footer() {
               </ul>
             </div>
             <div>
-              <p className="eyebrow mb-5">Services</p>
+              <p className="eyebrow mb-5">Shop</p>
               <ul className="flex flex-col gap-3">
-                {services.map((s) => (
-                  <li key={s.id}>
-                    <NavLink id="services" className="text-sm text-fg-muted transition-colors hover:text-fg">
-                      {s.title}
-                    </NavLink>
+                {productGroups.map((g) => (
+                  <li key={g}>
+                    <Link href={`/products?group=${g}`} className="text-sm text-fg-muted transition-colors hover:text-fg">
+                      {groupLabels[g]}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -85,16 +87,30 @@ export function Footer() {
               <p className="eyebrow mb-5">Contact</p>
               <ul className="flex flex-col gap-3 text-sm">
                 <li>
-                  <a href={`mailto:${contactInfo.email}`} className="text-fg-muted transition-colors hover:text-fg">
-                    {contactInfo.email}
-                  </a>
-                </li>
-                <li>
                   <a href={`tel:${contactInfo.phoneHref}`} className="text-fg-muted transition-colors hover:text-fg">
                     {contactInfo.phone}
                   </a>
                 </li>
-                <li className="text-fg-muted">{contactInfo.location}</li>
+                <li>
+                  <a href={`mailto:${contactInfo.email}`} className="text-fg-muted transition-colors hover:text-fg">
+                    Email us
+                  </a>
+                </li>
+                <li>
+                  <a href={contactInfo.facebook} target="_blank" rel="noopener noreferrer" className="text-fg-muted transition-colors hover:text-fg">
+                    Facebook page
+                  </a>
+                </li>
+                <li>
+                  <a href={contactInfo.globalSite} target="_blank" rel="noopener noreferrer" className="text-fg-muted transition-colors hover:text-fg">
+                    Global brand site
+                  </a>
+                </li>
+                <li>
+                  <Link href="/admin/login" className="text-fg-muted transition-colors hover:text-fg">
+                    Admin
+                  </Link>
+                </li>
               </ul>
               <ul className="mt-6 flex flex-wrap gap-2" aria-label="Social media">
                 {socialLinks.map((s) => (
@@ -138,16 +154,9 @@ export function Footer() {
 
       <div className="container-x mt-12 flex flex-col gap-6 border-t border-line py-8 text-sm text-fg-muted md:flex-row md:items-center md:justify-between">
         <p>
-          © {year} {siteConfig.legalName}. All rights reserved.
+          © {year} {siteConfig.legalName}, Nepal. {footerContent.bottomNote}
         </p>
         <ul className="flex items-center gap-6">
-          {footerContent.legal.map((l) => (
-            <li key={l.href}>
-              <Link href={l.href} className="transition-colors hover:text-fg">
-                {l.label}
-              </Link>
-            </li>
-          ))}
           <li>
             <button
               type="button"

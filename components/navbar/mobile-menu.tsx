@@ -114,6 +114,7 @@ export function MobileMenu({ open, onOpenChange, active }: MobileMenuProps) {
                     >
                       <NavLink
                         id={item.id}
+                        href={item.href}
                         onNavigate={() => onOpenChange(false)}
                         aria-current={active === item.id ? "location" : undefined}
                         className="flex items-baseline justify-between py-4 text-[2.6rem] font-medium leading-none tracking-[-0.04em]"
@@ -133,7 +134,10 @@ export function MobileMenu({ open, onOpenChange, active }: MobileMenuProps) {
               transition={{ delay: 0.5 }}
               className="relative mt-10 flex flex-col gap-5"
             >
-              <a href={`mailto:${contactInfo.email}`} className="text-lg">
+              <a href={`tel:${contactInfo.phoneHref}`} className="text-2xl font-medium tracking-[-0.03em]">
+                Call {contactInfo.phone}
+              </a>
+              <a href={`mailto:${contactInfo.email}`} className="text-lg text-fg-muted">
                 {contactInfo.email}
               </a>
               <ul className="flex gap-2">

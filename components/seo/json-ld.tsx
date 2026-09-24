@@ -1,47 +1,32 @@
 import { siteConfig, contactInfo, socialLinks } from "@/data/site";
-import { services } from "@/data/services";
 import { faqItems } from "@/data/faq";
 
-/** Structured data for search engines: organisation, website, services and FAQ. */
+/** Structured data for search engines: the store, the website and the FAQ. */
 export function HomeJsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Organization",
-        "@id": `${siteConfig.url}/#organization`,
+        "@type": "ElectronicsStore",
+        "@id": `${siteConfig.url}/#store`,
         name: siteConfig.legalName,
         url: siteConfig.url,
         logo: `${siteConfig.url}/icon.svg`,
+        telephone: "+977-980-1111669",
         email: contactInfo.email,
-        telephone: contactInfo.phone,
-        foundingDate: String(siteConfig.foundedYear),
         sameAs: socialLinks.map((s) => s.href),
+        areaServed: "Nepal",
+        description:
+          "Authorized dealer of genuine Webor home appliances in Nepal — televisions, refrigerators, washing machines, air conditioners and more.",
       },
       {
         "@type": "WebSite",
         "@id": `${siteConfig.url}/#website`,
         url: siteConfig.url,
-        name: siteConfig.name,
-        description: siteConfig.description,
-        publisher: { "@id": `${siteConfig.url}/#organization` },
-        inLanguage: "en",
-      },
-      {
-        "@type": "ProfessionalService",
-        "@id": `${siteConfig.url}/#service`,
         name: siteConfig.legalName,
-        url: siteConfig.url,
-        areaServed: "Worldwide",
-        address: { "@type": "PostalAddress", addressLocality: "Kathmandu", addressCountry: "NP" },
-        hasOfferCatalog: {
-          "@type": "OfferCatalog",
-          name: "Services",
-          itemListElement: services.map((s) => ({
-            "@type": "Offer",
-            itemOffered: { "@type": "Service", name: s.title, description: s.description },
-          })),
-        },
+        description: siteConfig.description,
+        publisher: { "@id": `${siteConfig.url}/#store` },
+        inLanguage: "en",
       },
       {
         "@type": "FAQPage",

@@ -113,7 +113,7 @@ export function Hero() {
               <ButtonLink
                 href={heroContent.primaryCta.href}
                 size="lg"
-                cursorLabel="Explore"
+                cursorLabel="Shop"
               >
                 {heroContent.primaryCta.label}
               </ButtonLink>

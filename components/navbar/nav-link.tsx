@@ -7,22 +7,24 @@ import { useScrollTo } from "@/hooks/use-lenis-scroll";
 
 type NavLinkProps = {
   id: string;
+  /** A separate page (e.g. /products). Without it, the link targets a home-page section. */
+  href?: string;
   className?: string;
   children: ReactNode;
   onNavigate?: () => void;
-  "aria-current"?: "location" | undefined;
+  "aria-current"?: "location" | "page" | undefined;
   tabIndex?: number;
 };
 
-/** Smooth-scrolls to a home-page section, or navigates to /#section from other pages. */
-export function NavLink({ id, className, children, onNavigate, ...rest }: NavLinkProps) {
+/** Smooth-scrolls to a home-page section, or navigates to /#section (or a page) from elsewhere. */
+export function NavLink({ id, href: pageHref, className, children, onNavigate, ...rest }: NavLinkProps) {
   const pathname = usePathname();
   const scrollTo = useScrollTo();
-  const href = id === "home" ? "/" : `/#${id}`;
+  const href = pageHref ?? (id === "home" ? "/" : `/#${id}`);
 
   const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
     onNavigate?.();
-    if (pathname !== "/") return; // let Next.js navigate
+    if (pageHref || pathname !== "/") return; // let Next.js navigate
     e.preventDefault();
     if (onNavigate) {
       // Wait for the mobile menu to close and smooth scrolling to resume.
@@ -33,7 +35,7 @@ export function NavLink({ id, className, children, onNavigate, ...rest }: NavLin
   };
 
   return (
-    <Link href={href} onClick={onClick} className={className} data-cursor="hover" scroll={id === "home"} {...rest}>
+    <Link href={href} onClick={onClick} className={className} data-cursor="hover" scroll={!!pageHref || id === "home"} {...rest}>
       {children}
     </Link>
   );

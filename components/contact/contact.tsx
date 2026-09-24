@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Globe, Mail, Phone } from "lucide-react";
 import { contactContent } from "@/data/contact";
 import { contactInfo, socialLinks } from "@/data/site";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -10,14 +10,18 @@ import { SceneView } from "@/components/three/scene-view";
 import { SceneFallback } from "@/components/three/scene-fallback";
 import { ContactForm } from "./contact-form";
 
+function FacebookGlyph({ className }: { className?: string }) {
+  return <SocialIcon platform="facebook" className={className} />;
+}
+
 const ContactScene = dynamic(() => import("@/components/three/scenes/contact-scene"), { ssr: false });
 
 export function Contact() {
   const details = [
-    { icon: Mail, label: "Email", value: contactInfo.email, href: `mailto:${contactInfo.email}` },
     { icon: Phone, label: "Phone", value: contactInfo.phone, href: `tel:${contactInfo.phoneHref}` },
-    { icon: MapPin, label: "Location", value: contactInfo.location },
-    { icon: Clock, label: "Hours", value: contactInfo.hours },
+    { icon: Mail, label: "Email", value: contactInfo.email, href: `mailto:${contactInfo.email}` },
+    { icon: FacebookGlyph, label: "Facebook", value: "29K followers · Message us", href: contactInfo.facebook },
+    { icon: Globe, label: "Global brand", value: "weborelectronics.com", href: contactInfo.globalSite },
   ];
 
   return (
@@ -35,7 +39,7 @@ export function Contact() {
         <div className="grid gap-16 lg:grid-cols-12 lg:gap-10">
           <div className="flex flex-col gap-12 lg:col-span-5">
             <SectionHeading
-              index="10"
+              index="07"
               eyebrow={contactContent.eyebrow}
               id="contact-title"
               title={contactContent.title}
@@ -48,7 +52,11 @@ export function Contact() {
                     <Icon className="size-3.5" aria-hidden="true" /> {label}
                   </p>
                   {href ? (
-                    <a href={href} data-cursor="hover" className="break-words text-sm font-medium transition-colors hover:text-accent-text">
+                    <a
+                      href={href}
+                      data-cursor="hover"
+                      {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      className="break-words text-sm font-medium transition-colors hover:text-accent-text">
                       {value}
                     </a>
                   ) : (

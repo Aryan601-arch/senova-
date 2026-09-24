@@ -10,14 +10,14 @@ export default function NotFound() {
         Lost in <span className="font-serif font-normal italic text-accent-text">space.</span>
       </h1>
       <p className="max-w-md text-lg text-fg-muted">
-        The page you&apos;re looking for drifted out of orbit. Let&apos;s get you back to somewhere familiar.
+        That page or product isn&apos;t here. Browse the full price list, or call 980-1111669 and we&apos;ll help.
       </p>
       <div className="flex flex-wrap gap-3">
         <ButtonLink href="/" size="lg">
           Back home
         </ButtonLink>
-        <Link href="/#contact" className="inline-flex h-14 items-center px-4 text-fg-muted underline-offset-4 hover:text-fg hover:underline">
-          Contact us
+        <Link href="/products" className="inline-flex h-14 items-center px-4 text-fg-muted underline-offset-4 hover:text-fg hover:underline">
+          Browse products
         </Link>
       </div>
     </section>

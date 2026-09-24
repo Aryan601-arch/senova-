@@ -3,7 +3,8 @@
 import dynamic from "next/dynamic";
 import { useId } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Box, Brain, Cloud, Code2, Smartphone, Sparkles, type LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { AirVent, ArrowUpRight, CookingPot, Fan, Refrigerator, Tv, WashingMachine, type LucideIcon } from "lucide-react";
 import { services, type Service } from "@/data/services";
 import { activeServiceStore } from "@/lib/stores";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -14,15 +15,15 @@ import { cn } from "@/lib/utils";
 const ServicesScene = dynamic(() => import("@/components/three/scenes/services-scene"), { ssr: false });
 
 const icons: Record<Service["icon"], LucideIcon> = {
-  code: Code2,
-  smartphone: Smartphone,
-  brain: Brain,
-  box: Box,
-  cloud: Cloud,
-  sparkles: Sparkles,
+  fridge: Refrigerator,
+  ac: AirVent,
+  washer: WashingMachine,
+  pot: CookingPot,
+  tv: Tv,
+  fan: Fan,
 };
 
-function ServiceRow({ service, index, active }: { service: Service; index: number; active: boolean }) {
+function ServiceRow({ service, index, active, count }: { service: Service; index: number; active: boolean; count?: number }) {
   const panelId = useId();
   const Icon = icons[service.icon];
   const activate = () => activeServiceStore.set(index);
@@ -86,7 +87,21 @@ function ServiceRow({ service, index, active }: { service: Service; index: numbe
           >
             <div className="flex flex-col gap-5 pb-9 pl-9 md:flex-row md:items-start md:gap-10 md:pl-[3.25rem]">
               <Icon className="hidden size-6 shrink-0 text-accent-text md:block" aria-hidden="true" />
-              <p className="max-w-md text-base leading-relaxed text-fg-muted">{service.description}</p>
+              <div className="flex max-w-md flex-col gap-4">
+                <p className="text-base leading-relaxed text-fg-muted">{service.description}</p>
+                <Link
+                  href={`/products?group=${service.id}`}
+                  data-cursor="hover"
+                  className="group/link inline-flex w-fit items-center gap-2 text-sm font-medium"
+                >
+                  <span className="relative">
+                    Browse {service.title}
+                    {count ? <span className="text-fg-muted"> — {count} models</span> : null}
+                    <span className="absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-current transition-transform duration-500 ease-out-expo group-hover/link:origin-left group-hover/link:scale-x-100" />
+                  </span>
+                  <ArrowUpRight className="size-4 transition-transform duration-500 ease-out-expo group-hover/link:rotate-45" aria-hidden="true" />
+                </Link>
+              </div>
               <ul className="flex flex-wrap gap-2 md:ml-auto md:max-w-[14rem] md:justify-end">
                 {service.deliverables.map((d) => (
                   <li key={d} className="rounded-full border border-line px-3 py-1 text-xs text-fg-muted">
@@ -102,24 +117,24 @@ function ServiceRow({ service, index, active }: { service: Service; index: numbe
   );
 }
 
-export function Services() {
+export function Services({ counts = {} }: { counts?: Partial<Record<Service["id"], number>> }) {
   const active = activeServiceStore.use();
   const current = services[active] ?? services[0];
   const CurrentIcon = icons[current.icon];
 
   return (
-    <section id="services" aria-labelledby="services-title" className="relative py-28 md:py-44">
+    <section id="ranges" aria-labelledby="services-title" className="relative py-28 md:py-44">
       <div className="container-x">
         <div className="mb-16 grid gap-10 md:mb-24 md:grid-cols-12 md:items-end">
           <SectionHeading
             className="md:col-span-7"
             index="02"
-            eyebrow="Services"
+            eyebrow="Shop by range"
             id="services-title"
-            title="Everything it takes to ship something remarkable."
+            title="Find what you need."
           />
           <p className="max-w-md text-lg leading-relaxed text-fg-muted md:col-span-4 md:col-start-9">
-            Six disciplines, one senior team. Hover a service to see how we think about it.
+            Six ranges, from TVs to dishwashers. Pick one to see what it covers and browse every model and price.
           </p>
         </div>
 
@@ -175,7 +190,7 @@ export function Services() {
 
           <ul className="border-t border-line lg:order-1 lg:col-span-7">
             {services.map((service, i) => (
-              <ServiceRow key={service.id} service={service} index={i} active={i === active} />
+              <ServiceRow key={service.id} service={service} index={i} active={i === active} count={counts[service.id]} />
             ))}
           </ul>
         </div>

@@ -9,6 +9,8 @@ import { Footer } from "@/components/footer/footer";
 import { Preloader } from "@/components/loader/preloader";
 import { CustomCursor } from "@/components/cursor/custom-cursor";
 import { CanvasRoot } from "@/components/three/canvas-root";
+import { HelpBubble } from "@/components/help/help-bubble";
+import { SiteOnly } from "@/components/providers/site-only";
 
 const interTight = Inter_Tight({
   subsets: ["latin"],
@@ -33,8 +35,8 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Digital experiences, designed and engineered`,
-    template: `%s — ${siteConfig.name}`,
+    default: `${siteConfig.legalName} — Genuine Webor home appliances in Nepal`,
+    template: `%s — ${siteConfig.legalName}`,
   },
   description: siteConfig.description,
   keywords: [...siteConfig.keywords],
@@ -46,15 +48,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: siteConfig.locale,
     url: siteConfig.url,
-    siteName: siteConfig.name,
-    title: `${siteConfig.name} — Digital experiences, designed and engineered`,
+    siteName: siteConfig.legalName,
+    title: siteConfig.legalName,
     description: siteConfig.description,
   },
   twitter: {
     card: "summary_large_image",
-    site: siteConfig.twitterHandle,
-    creator: siteConfig.twitterHandle,
-    title: `${siteConfig.name} — Digital experiences, designed and engineered`,
+    title: siteConfig.legalName,
     description: siteConfig.description,
   },
   robots: {
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  category: "technology",
+  category: "shopping",
 };
 
 export const viewport: Viewport = {
@@ -96,14 +96,19 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           >
             Skip to content
           </a>
-          <Preloader />
-          <CustomCursor />
-          <CanvasRoot />
-          <Navbar />
+          <SiteOnly>
+            <Preloader />
+            <CustomCursor />
+            <CanvasRoot />
+            <Navbar />
+          </SiteOnly>
           <main id="main" className="relative">
             {children}
           </main>
-          <Footer />
+          <SiteOnly>
+            <Footer />
+            <HelpBubble />
+          </SiteOnly>
         </AppProviders>
       </body>
     </html>

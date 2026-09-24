@@ -32,7 +32,7 @@ function useActiveSection(ids: string[], enabled: boolean) {
   return active;
 }
 
-const sectionIds = navItems.map((n) => n.id);
+const sectionIds = navItems.filter((n) => !n.href).map((n) => n.id);
 
 export function Navbar() {
   const pathname = usePathname();
@@ -78,12 +78,13 @@ export function Navbar() {
 
           <ul className="hidden items-center gap-1 lg:flex">
             {navItems.map((item) => {
-              const isActive = isHome && active === item.id;
+              const isActive = item.href ? pathname.startsWith(item.href) || pathname.startsWith("/product/") : isHome && active === item.id;
               return (
                 <li key={item.id}>
                   <NavLink
                     id={item.id}
-                    aria-current={isActive ? "location" : undefined}
+                    href={item.href}
+                    aria-current={isActive ? (item.href ? "page" : "location") : undefined}
                     className={cn(
                       "group relative inline-flex h-10 items-center rounded-full px-4 text-sm transition-colors duration-300",
                       isActive ? "text-fg" : "text-fg-muted hover:text-fg",
@@ -112,15 +113,16 @@ export function Navbar() {
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <NavLink
-              id={navCta.id}
+            <a
+              href={navCta.href}
+              data-cursor="hover"
               className="group/cta relative hidden h-11 items-center gap-2 overflow-hidden rounded-full bg-accent px-5 text-sm font-medium text-accent-ink transition-transform active:scale-95 sm:inline-flex"
             >
               <span className="absolute inset-0 translate-y-full rounded-full bg-fg transition-transform duration-500 ease-out-expo group-hover/cta:translate-y-0" aria-hidden="true" />
               <span className="relative transition-colors duration-500 group-hover/cta:text-bg">{navCta.label}</span>
               <span className="relative size-1.5 rounded-full bg-accent-ink transition-colors duration-500 group-hover/cta:bg-accent" aria-hidden="true" />
-            </NavLink>
-            <MobileMenu open={menuOpen} onOpenChange={setMenuOpen} active={isHome ? active : undefined} />
+            </a>
+            <MobileMenu open={menuOpen} onOpenChange={setMenuOpen} active={isHome ? active : pathname.startsWith("/product") ? "products" : undefined} />
           </div>
         </nav>
       </motion.header>

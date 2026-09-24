@@ -70,11 +70,11 @@ export function Process() {
     <section id="process" ref={sectionRef} aria-labelledby="process-title" className="relative py-28 md:py-44">
       <div className="container-x">
         <SectionHeading
-          index="06"
-          eyebrow="Process"
+          index="05"
+          eyebrow="How buying works"
           id="process-title"
-          title="A clear path from idea to impact."
-          description="Six stages, no black boxes. You always know what is happening, what comes next and why."
+          title="From browsing to after-sales."
+          description="Five simple steps, one team the whole way. You always know who to call."
           className="mb-16 md:mb-24"
         />
 
@@ -83,7 +83,7 @@ export function Process() {
           <div className="hidden md:col-span-5 md:block">
             <div className="sticky top-28 flex flex-col gap-8 rounded-[2rem] border border-line bg-bg-elevated/40 p-8 backdrop-blur-sm lg:p-10">
               <div className="flex items-center justify-between">
-                <span className="eyebrow">Current stage</span>
+                <span className="eyebrow">Current step</span>
                 <svg viewBox="0 0 100 100" className="size-14 -rotate-90" aria-hidden="true">
                   <circle cx="50" cy="50" r="42" fill="none" stroke="var(--line)" strokeWidth="4" />
                   <circle

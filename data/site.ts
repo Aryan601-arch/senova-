@@ -7,66 +7,57 @@ import { siteUrl } from "@/lib/utils";
  */
 
 export const siteConfig = {
-  name: "Senova",
-  legalName: "Senova Studio",
-  tagline: "Digital experiences designed with technology, motion and imagination.",
+  name: "Webor",
+  legalName: "Webor Appliances",
+  tagline: "Creating easy life — genuine Webor home appliances for households across Nepal.",
   description:
-    "Senova is an independent digital studio crafting immersive websites, products and 3D experiences for ambitious companies. Strategy, design and engineering under one roof.",
+    "Webor Appliances — genuine Webor televisions, refrigerators, washing machines, air conditioners and home appliances in Nepal. Full official price list. Call 980-1111669.",
   url: siteUrl,
   locale: "en_US",
   keywords: [
-    "digital studio",
-    "web development",
-    "3D websites",
-    "WebGL",
-    "product design",
-    "Next.js agency",
-    "AI solutions",
-    "interactive experiences",
+    "Webor",
+    "Webor Appliances",
+    "home appliances Nepal",
+    "refrigerator price Nepal",
+    "air conditioner Nepal",
+    "washing machine Nepal",
+    "Webor TV",
+    "Nexon Corporation",
   ],
-  twitterHandle: "@senovastudio",
-  foundedYear: 2019,
 } as const;
 
 export const heroContent = {
-  eyebrow: "Independent digital studio — Est. 2019",
+  eyebrow: "Webor Appliances — Nepal",
   /** Each entry renders on its own line. Words animate in one by one. */
-  headline: ["Build", "what's next."],
-  supporting: "Digital experiences designed with technology, motion and imagination.",
-  primaryCta: { label: "Explore", href: "#about" },
-  secondaryCta: { label: "Start a Project", href: "#contact" },
+  headline: ["Creating", "easy life."],
+  supporting:
+    "Genuine Webor televisions, refrigerators, washing machines, air conditioners and everyday appliances — with one phone number to call when you need us.",
+  primaryCta: { label: "Shop the range", href: "/products" },
+  secondaryCta: { label: "Call 980-1111669", href: "tel:9801111669" },
   /** Small meta labels shown in the hero corners. */
   meta: [
-    { label: "Currently", value: "Booking Q1 2027" },
-    { label: "Based in", value: "Kathmandu / Remote" },
+    { label: "Facebook", value: "29,000+ followers" },
+    { label: "Serving", value: "Households across Nepal" },
   ],
 } as const;
 
 export const contactInfo = {
-  email: "hello@senova.studio",
-  phone: "+977 980 000 0000",
-  phoneHref: "+9779800000000",
-  location: "Kathmandu, Nepal — working worldwide",
-  hours: "Mon – Fri, 9:00 – 18:00 NPT",
-  responseTime: "We reply within one business day.",
+  email: "nepal@weborelectronics.com",
+  phone: "980-1111669",
+  phoneHref: "9801111669",
+  facebook: "https://www.facebook.com/weborappliances",
+  globalSite: "https://www.weborelectronics.com",
+  location: "Nepal",
 } as const;
 
-export type SocialPlatform = "x" | "linkedin" | "instagram" | "github" | "dribbble";
+export type SocialPlatform = "facebook" | "web";
 
 export const socialLinks: { platform: SocialPlatform; label: string; href: string }[] = [
-  { platform: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/" },
-  { platform: "x", label: "X (Twitter)", href: "https://x.com/" },
-  { platform: "instagram", label: "Instagram", href: "https://www.instagram.com/" },
-  { platform: "github", label: "GitHub", href: "https://github.com/" },
-  { platform: "dribbble", label: "Dribbble", href: "https://dribbble.com/" },
+  { platform: "facebook", label: "Facebook", href: contactInfo.facebook },
+  { platform: "web", label: "Global brand site", href: contactInfo.globalSite },
 ];
 
 export const footerContent = {
-  statement: "Let's build what's next.",
-  newsletterTitle: "The Senova Dispatch",
-  newsletterText: "One considered email a month on design, engineering and the web we want to build.",
-  legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms", href: "/terms" },
-  ],
+  statement: "Ready when you are.",
+  bottomNote: "Part of the global Webor home appliances line.",
 } as const;

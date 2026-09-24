@@ -1,18 +1,26 @@
 import type { MetadataRoute } from "next";
+import { connection } from "next/server";
 import { siteConfig } from "@/data/site";
-import { projects } from "@/data/projects";
+import { productGroups } from "@/data/catalog";
+import { getProducts } from "@/lib/db";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  await connection();
   const now = new Date();
   return [
-    { url: siteConfig.url, lastModified: now, changeFrequency: "monthly", priority: 1 },
-    ...projects.map((p) => ({
-      url: `${siteConfig.url}/work/${p.slug}`,
+    { url: siteConfig.url, lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: `${siteConfig.url}/products`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    ...productGroups.map((g) => ({
+      url: `${siteConfig.url}/products?group=${g}`,
       lastModified: now,
-      changeFrequency: "yearly" as const,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    })),
+    ...getProducts().map((p) => ({
+      url: `${siteConfig.url}/product/${p.id}`,
+      lastModified: new Date(`${p.updated_at.replace(" ", "T")}Z`),
+      changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
-    { url: `${siteConfig.url}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
-    { url: `${siteConfig.url}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
   ];
 }

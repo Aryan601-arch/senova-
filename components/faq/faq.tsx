@@ -67,13 +67,13 @@ export function Faq() {
     <section id="faq" aria-labelledby="faq-title" className="relative py-28 md:py-44">
       <div className="container-x grid gap-14 md:grid-cols-12">
         <div className="flex flex-col gap-8 md:col-span-5">
-          <SectionHeading index="09" eyebrow="FAQ" id="faq-title" title="Questions, answered." />
+          <SectionHeading index="06" eyebrow="Before you call" id="faq-title" title="Questions people ask us first." />
           <p className="max-w-sm text-lg leading-relaxed text-fg-muted">
-            Something else on your mind? Write to{" "}
-            <a href={`mailto:${contactInfo.email}`} className="text-fg underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-accent">
-              {contactInfo.email}
-            </a>
-            .
+            The short answers — call{" "}
+            <a href={`tel:${contactInfo.phoneHref}`} className="text-fg underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-accent">
+              {contactInfo.phone}
+            </a>{" "}
+            if yours isn&apos;t here.
           </p>
         </div>
         <ul className="border-t border-line md:col-span-7">

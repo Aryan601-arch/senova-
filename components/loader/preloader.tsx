@@ -76,7 +76,7 @@ export function Preloader() {
         <motion.div
           key="preloader"
           role="progressbar"
-          aria-label={`Loading ${siteConfig.name}`}
+          aria-label={`Loading ${siteConfig.legalName}`}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={display}
@@ -91,13 +91,13 @@ export function Preloader() {
               <motion.span animate={{ rotate: 360 }} transition={{ duration: 6, repeat: Infinity, ease: "linear" }} className="grid">
                 <LogoMark className="size-9" />
               </motion.span>
-              <span className="text-lg font-semibold lowercase tracking-[-0.04em]">{siteConfig.name}</span>
+              <span className="text-lg font-semibold uppercase tracking-[0.02em]">{siteConfig.name}</span>
             </span>
-            <span className="eyebrow hidden sm:block">Digital studio — {new Date().getFullYear()}</span>
+            <span className="eyebrow hidden sm:block">Home appliances — Nepal</span>
           </div>
 
           <div className="flex items-end justify-between gap-6">
-            <p className="eyebrow max-w-[18ch]">Loading experience</p>
+            <p className="eyebrow max-w-[18ch]">Creating easy life</p>
             <p
               className="text-[clamp(4.5rem,18vw,14rem)] font-medium leading-[0.8] tracking-[-0.06em]"
               style={{ fontVariantNumeric: "tabular-nums" }}

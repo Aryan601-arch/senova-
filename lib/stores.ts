@@ -11,14 +11,8 @@ export const themeStore = createStore<Theme>("dark");
  */
 export const pointer = { x: 0, y: 0, clientX: -1, clientY: -1, active: false };
 
-/** Index of the hovered/active service, read by the services 3D visual. */
+/** Index of the hovered/active product range, read by the ranges 3D visual. */
 export const activeServiceStore = createStore<number>(0);
-
-/** Selected + hovered object in the 3D showcase. */
-export const showcaseStore = createStore<{ selected: string | null; hovered: string | null }>({
-  selected: null,
-  hovered: null,
-});
 
 /** Whether the loading screen has finished. Sections wait for this before animating in. */
 export const loaderStore = createStore<boolean>(false);
@@ -36,6 +30,3 @@ export const cursorStore = createStore<{ label: string | null; variant: "default
  * fallback whenever the status is not "ready".
  */
 export const webglStatusStore = createStore<"pending" | "ready" | "failed">("pending");
-
-/** Drag rotation for the 3D showcase: written by DOM pointer handlers, read in useFrame. */
-export const showcaseDrag = { x: 0, y: 0, targetX: 0, targetY: 0 };

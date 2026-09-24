@@ -1,16 +1,15 @@
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/data/site";
 
-/** Senova mark: a four-point "nova" star inside an orbit ring. */
+/** Webor mark: the "W" badge from the original store, drawn in the site accent. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 32 32" fill="none" aria-hidden="true" className={cn("size-7", className)}>
       <circle cx="16" cy="16" r="14.25" stroke="currentColor" strokeOpacity="0.35" strokeWidth="1.5" />
+      <circle cx="16" cy="16" r="11" fill="var(--accent)" />
       <path
-        d="M16 4.5c.9 6.1 5.4 10.6 11.5 11.5-6.1.9-10.6 5.4-11.5 11.5-.9-6.1-5.4-10.6-11.5-11.5C10.6 15.1 15.1 10.6 16 4.5Z"
-        fill="var(--accent)"
+        d="M9.6 11.5h2.1l1.6 6.2 1.8-6.2h1.8l1.8 6.2 1.6-6.2h2.1l-2.7 9h-1.9l-1.8-6-1.8 6h-1.9l-2.7-9Z"
+        fill="var(--accent-ink)"
       />
-      <circle cx="16" cy="16" r="2.2" fill="var(--accent-ink)" />
     </svg>
   );
 }
@@ -19,9 +18,7 @@ export function Logo({ className, showWordmark = true }: { className?: string; s
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <LogoMark />
-      {showWordmark && (
-        <span className="text-[1.15rem] font-semibold lowercase tracking-[-0.04em]">{siteConfig.name}</span>
-      )}
+      {showWordmark && <span className="text-[1.15rem] font-semibold uppercase tracking-[0.02em]">Webor</span>}
     </span>
   );
 }
