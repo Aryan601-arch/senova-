@@ -155,14 +155,7 @@ To add a brand-new 3D area, create a scene in `components/three/scenes/`, import
 
 ## Deployment
 
-**Vercel (recommended)**
-
-1. Push the repository to GitHub and import it at [vercel.com/new](https://vercel.com/new).
-2. Framework preset: Next.js (auto-detected). Build command `npm run build`, output handled automatically.
-3. Add environment variables: `NEXT_PUBLIC_SITE_URL` (your custom domain, once you have one) and optionally `CONTACT_WEBHOOK_URL`. Until `NEXT_PUBLIC_SITE_URL` is set, canonical URLs, the sitemap and Open Graph images use the `*.vercel.app` domain Vercel assigns.
-4. Deploy, then add your custom domain in the project settings. Pull requests get their own preview URL; production serves the `main` branch.
-
-**Any Node.js host (Railway, Render, Fly.io, a VPS)**
+The site runs on any Node.js host (Railway, Render, Fly.io, a VPS or your own machine):
 
 ```bash
 npm ci
@@ -170,4 +163,4 @@ npm run build
 npm run start   # listens on $PORT or 3000
 ```
 
-The API routes need a Node.js runtime, so a fully static export is not used. Everything else is prerendered at build time.
+Set `NEXT_PUBLIC_SITE_URL` to your domain (used for canonical URLs, the sitemap and Open Graph) and optionally `CONTACT_WEBHOOK_URL`. The API routes need a Node.js runtime, so a fully static export is not used. Everything else is prerendered at build time.
