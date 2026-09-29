@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  Senova design tokens: cream, blush and rose, with warm cocoa text  */
+/* ------------------------------------------------------------------ */
+
+:root {
+  --cream: #fbf6f2;
+  --blush: #f5e6df;
+  --blush-deep: #ecd3c9;
+  --rose: #b0685a;
+  --rose-deep: #93503f;
+  --rose-soft: #d9a497;
+  --cocoa: #3d2b27;
+  --cocoa-muted: #7a625b;
+  --line: #ead9d1;
+  --sage: #a9b79a;
+  --gold: #c9a27a;
+  --white: #ffffff;
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-blush: var(--blush);
+  --color-blush-deep: var(--blush-deep);
+  --color-rose: var(--rose);
+  --color-rose-deep: var(--rose-deep);
+  --color-rose-soft: var(--rose-soft);
+  --color-cocoa: var(--cocoa);
+  --color-cocoa-muted: var(--cocoa-muted);
+  --color-line: var(--line);
+  --color-sage: var(--sage);
+  --color-gold: var(--gold);
+
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@theme {
+  --text-display: clamp(2.75rem, 6.2vw, 5.5rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.01em;
+  --text-heading: clamp(2.1rem, 4vw, 3.4rem);
+  --text-heading--line-height: 1.05;
+  --shadow-card: 0 1px 2px rgb(61 43 39 / 0.04), 0 18px 40px -24px rgb(147 80 63 / 0.35);
+  --shadow-lift: 0 2px 4px rgb(61 43 39 / 0.05), 0 30px 60px -28px rgb(147 80 63 / 0.45);
+}
+
+@layer base {
+  html {
+    background: var(--cream);
+    color: var(--cocoa);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--cocoa);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--rose-soft);
+    color: var(--cocoa);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--rose);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@utility container-x {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 78rem;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+@utility eyebrow {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rose);
+}
+
+/* Buttons from the reference: small-radius, uppercase, letter-spaced */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.25s var(--ease-soft),
+    color 0.25s var(--ease-soft),
+    border-color 0.25s var(--ease-soft),
+    transform 0.25s var(--ease-soft),
+    box-shadow 0.25s var(--ease-soft);
+}
+
+@utility btn-rose {
+  background: var(--rose);
+  color: var(--white);
+  box-shadow: 0 10px 24px -14px rgb(147 80 63 / 0.8);
+  &:hover {
+    background: var(--rose-deep);
+    transform: translateY(-1px);
+  }
+}
+
+@utility btn-outline {
+  border: 1px solid var(--rose-soft);
+  color: var(--cocoa);
+  background: rgb(255 255 255 / 0.6);
+  &:hover {
+    border-color: var(--rose);
+    color: var(--rose-deep);
+  }
+}
+
+@utility btn-dark {
+  background: var(--cocoa);
+  color: var(--cream);
+  &:hover {
+    background: #2a1d1a;
+  }
+}
+
+/* Thin rule with a centered ornament, as under the reference's section titles */
+@utility ornament-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--rose-soft);
+  &::before,
+  &::after {
+    content: "";
+    height: 1px;
+    width: 3.5rem;
+    background: currentColor;
+  }
+}
+
+/* Scroll reveal: elements start faded and slide in when .is-visible is added */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s var(--ease-soft),
+    transform 0.9s var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 3D tilt used on product cards */
+.tilt {
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.5s var(--ease-soft), box-shadow 0.5s var(--ease-soft);
+}
+.tilt-pop {
+  transform: translateZ(40px);
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(-10px) rotate(var(--r, 0deg));
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
