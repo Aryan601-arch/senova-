@@ -43,7 +43,6 @@ export function ProductImage({ product, sizes = "(max-width: 768px) 50vw, 25vw",
           src={product.image}
           alt={product.name}
           fill
-          unoptimized
           sizes={sizes}
           priority={priority}
           onLoad={() => setState("loaded")}
