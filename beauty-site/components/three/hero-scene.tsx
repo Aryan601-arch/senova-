@@ -1,9 +1,12 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { ContactShadows, Environment, Float, Lightformer, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
+import { useRouter } from "next/navigation";
+import { getProduct } from "@/lib/catalog";
+import type { Product } from "@/lib/types";
 
 /**
  * The 3D hero: Senova packaging on blush pedestals, with drifting petals.
@@ -142,6 +145,109 @@ function LipOil(props: React.ComponentProps<"group">) {
   );
 }
 
+/**
+ * Photos come through Next's image service, so they are served from this site
+ * (WebGL can't use pictures straight from another website) and arrive small and fast.
+ */
+function photoUrl(src: string) {
+  return `/_next/image?url=${encodeURIComponent(src)}&w=640&q=75`;
+}
+
+function usePhoto(src: string) {
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  useEffect(() => {
+    let alive = true;
+    let loaded: THREE.Texture | null = null;
+    new THREE.TextureLoader().load(
+      photoUrl(src),
+      (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = 4;
+        loaded = tex;
+        if (alive) setTexture(tex);
+        else tex.dispose();
+      },
+      undefined,
+      () => {
+        /* photo unreachable: the drawn packaging stays in its place */
+      },
+    );
+    return () => {
+      alive = false;
+      loaded?.dispose();
+    };
+  }, [src]);
+  return texture;
+}
+
+/**
+ * A real product photo on a soft white display card. Until the photo arrives (or if it
+ * can't load) the drawn packaging passed as children shows instead.
+ * Hover lifts the card; clicking opens the product's page.
+ */
+function PhotoProduct({
+  product,
+  height,
+  onOpen,
+  children,
+  ...props
+}: {
+  product: Product;
+  height: number;
+  onOpen: (href: string) => void;
+  children: React.ReactNode;
+} & React.ComponentProps<"group">) {
+  const texture = usePhoto(product.image);
+  const ref = useRef<THREE.Group>(null);
+  const [hovered, setHovered] = useState(false);
+
+  useFrame((_, delta) => {
+    const g = ref.current;
+    if (!g) return;
+    const s = THREE.MathUtils.damp(g.scale.x, hovered ? 1.08 : 1, 6, delta);
+    g.scale.setScalar(s);
+  });
+
+  if (!texture) return <group {...props}>{children}</group>;
+
+  const img = texture.image as { width: number; height: number };
+  const aspect = img.width && img.height ? img.width / img.height : 1;
+  const w = height * aspect;
+  const pad = 0.14;
+
+  return (
+    <group {...props}>
+      <group
+        ref={ref}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = "";
+        }}
+        onClick={() => onOpen(`/product/${product.slug}`)}
+      >
+        <RoundedBox
+          args={[w + pad * 2, height + pad * 2, 0.08]}
+          radius={0.06}
+          smoothness={4}
+          position={[0, (height + pad * 2) / 2, -0.05]}
+          castShadow
+        >
+          <meshPhysicalMaterial color="#ffffff" emissive="#fff4ef" emissiveIntensity={0.35} roughness={0.35} clearcoat={0.6} />
+        </RoundedBox>
+        <mesh position={[0, height / 2 + pad, 0]}>
+          <planeGeometry args={[w, height]} />
+          <meshBasicMaterial map={texture} transparent alphaTest={0.02} toneMapped={false} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
 function Pedestal({ radius, height, ...props }: { radius: number; height: number } & React.ComponentProps<"group">) {
   return (
     <group {...props}>
@@ -218,7 +324,16 @@ function Rig({ children }: { children: React.ReactNode }) {
   return <group ref={ref}>{children}</group>;
 }
 
+// The four products shown in the hero; change the slugs to feature others.
+const hero = {
+  center: getProduct("vitamin-c-serum")!,
+  left: getProduct("rose-toner")!,
+  right: getProduct("vitamin-c-brightening-face-cream")!,
+  floating: getProduct("strawberry-hydra-nourish-lip-oil")!,
+};
+
 export default function HeroScene({ compact = false }: { compact?: boolean }) {
+  const router = useRouter();
   return (
     <Canvas
       shadows
@@ -257,17 +372,25 @@ export default function HeroScene({ compact = false }: { compact?: boolean }) {
           <Pedestal radius={0.95} height={0.35} position={[1.65, 0, 0.6]} />
           <Pedestal radius={0.8} height={1.1} position={[-2.35, 0, -0.6]} />
 
-          <Float speed={1.6} rotationIntensity={0.25} floatIntensity={0.35} floatingRange={[0, 0.15]}>
-            <SerumBottle position={[-0.35, 0.72, 0]} rotation={[0, -0.25, 0]} />
+          <Float speed={1.6} rotationIntensity={0.15} floatIntensity={0.35} floatingRange={[0, 0.15]}>
+            <PhotoProduct onOpen={router.push} product={hero.center} height={2.1} position={[-0.35, 0.72, 0]} rotation={[0, -0.12, 0]}>
+              <SerumBottle rotation={[0, -0.25, 0]} />
+            </PhotoProduct>
           </Float>
-          <Float speed={1.3} rotationIntensity={0.2} floatIntensity={0.3} floatingRange={[0, 0.12]}>
-            <CreamJar position={[1.65, 0.37, 0.6]} rotation={[0, -0.5, 0]} />
+          <Float speed={1.3} rotationIntensity={0.15} floatIntensity={0.3} floatingRange={[0, 0.12]}>
+            <PhotoProduct onOpen={router.push} product={hero.right} height={1.45} position={[1.65, 0.37, 0.6]} rotation={[0, -0.35, 0]}>
+              <CreamJar rotation={[0, -0.5, 0]} />
+            </PhotoProduct>
           </Float>
-          <Float speed={1.1} rotationIntensity={0.2} floatIntensity={0.25} floatingRange={[0, 0.1]}>
-            <PumpBottle position={[-2.35, 1.12, -0.6]} rotation={[0, 0.35, 0]} scale={0.9} />
+          <Float speed={1.1} rotationIntensity={0.15} floatIntensity={0.25} floatingRange={[0, 0.1]}>
+            <PhotoProduct onOpen={router.push} product={hero.left} height={1.7} position={[-2.35, 1.12, -0.6]} rotation={[0, 0.3, 0]}>
+              <PumpBottle rotation={[0, 0.35, 0]} scale={0.9} />
+            </PhotoProduct>
           </Float>
-          <Float speed={2} rotationIntensity={0.6} floatIntensity={1.2}>
-            <LipOil position={[2.5, 2.2, -0.8]} rotation={[0.2, 0, -0.55]} scale={0.8} />
+          <Float speed={2} rotationIntensity={0.4} floatIntensity={1.2}>
+            <PhotoProduct onOpen={router.push} product={hero.floating} height={0.95} position={[2.55, 2.05, -0.8]} rotation={[0.1, -0.3, -0.15]}>
+              <LipOil rotation={[0.2, 0, -0.55]} scale={0.8} />
+            </PhotoProduct>
           </Float>
 
           {[
